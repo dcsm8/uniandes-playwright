@@ -17,6 +17,21 @@ test.describe("Login", () => {
     // Then
     await expectSuccessfulLogin(page);
   });
+
+  test("Iniciar sesión con credenciales inválidas", async ({ page }) => {
+    // Given
+    await navigateToLoginPage(page);
+
+    // When
+    await loginWithCredentials(
+      page,
+      "invalid_email@example.com",
+      "invalid_password"
+    );
+
+    // Then
+    await expectUnsuccessfulLogin(page);
+  });
 });
 
 async function navigateToLoginPage(page: Page) {
@@ -37,4 +52,9 @@ async function expectSuccessfulLogin(page: Page) {
   await page.waitForSelector('a[href="#/site/"]');
   const url = page.url();
   expect(url).toContain("/ghost/#/site");
+}
+
+async function expectUnsuccessfulLogin(page: Page) {
+  const errorMessage = await page.waitForSelector(".gh-btn-red");
+  expect(errorMessage).toBeTruthy();
 }

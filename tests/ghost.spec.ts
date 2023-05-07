@@ -34,6 +34,9 @@ test.describe("Posts", () => {
   });
 
   test("Crear un nuevo post", async ({ page }) => {
+    await navigateToPostPage(page);
+    await page.waitForSelector(".posts-list");
+    const postListElementsBefore = await page.$$(".gh-posts-list-item");
     await navigateToPostEditor(page);
     await page.getByPlaceholder("Post Title").click();
     await page.getByPlaceholder("Post Title").fill("My new Post Title");
@@ -42,8 +45,8 @@ test.describe("Posts", () => {
     await page.getByRole("button", { name: "Publish" }).click();
     await page.getByRole("button", { name: "Publish", exact: true }).click();
     await page.waitForTimeout(1000);
-    await page.getByRole("link", { name: "Posts" }).click();
-    await expectPostCreatedSuccessfully(page, "My new Post Title");
+    await navigateToPostPage(page);
+    await expectPostCreatedSuccessfully(page, postListElementsBefore.length);
   });
 });
 
@@ -72,14 +75,15 @@ async function expectUnsuccessfulLogin(page: Page) {
   expect(errorMessage).toBeTruthy();
 }
 
+async function navigateToPostPage(page: Page) {
+  await page.goto(`${config.baseUrl}/ghost/#/posts/`);
+}
+
 async function navigateToPostEditor(page: Page) {
   await page.goto(`${config.baseUrl}/ghost/#/editor/post/`);
 }
 
-async function expectPostCreatedSuccessfully(page: Page, title: string) {
-  await page.waitForSelector(`.gh-content-entry-title:has-text("${title}")`);
-  const postTitleElement = await page.$(
-    `.gh-content-entry-title:has-text("${title}")`
-  );
-  expect(postTitleElement).toBeTruthy();
+async function expectPostCreatedSuccessfully(page: Page, initialCount: number) {
+  const postListElementsAfter = await page.$$(".gh-posts-list-item");
+  expect(postListElementsAfter.length).toBe(initialCount + 1);
 }

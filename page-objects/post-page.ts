@@ -35,7 +35,6 @@ export class PostPage {
   }
 
   async fillPostTitle(title: string) {
-    // TODO: update selector
     await this.page.getByPlaceholder("Post Title").click();
     await this.page.getByPlaceholder("Post Title").fill(title);
   }

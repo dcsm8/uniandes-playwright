@@ -19,7 +19,7 @@ export class PostPage {
   async publishUpdatedPost() {
     await this.page.getByRole("button", { name: "Update" }).click();
     await this.page.getByRole("button", { name: "Update", exact: true }).click();
-    await this.page.waitForSelector('a[href="#/posts/"]');
+    await this.page.waitForTimeout(1000);
   }
 
   async expectPostUpdatedSuccessfully(updatedTitle: string) {
@@ -54,5 +54,16 @@ export class PostPage {
     await this.page.waitForSelector(`.gh-notification:has-text("${notificationText}")`);
     const notificationElement = await this.page.$(`.gh-notification:has-text("${notificationText}")`);
     expect(notificationElement).toBeTruthy();
+  }
+
+  async selectPostByIndex(index: number) {
+    await this.page.waitForSelector(".posts-list");
+    const postElements = await this.page.$$(".gh-posts-list-item");
+    await postElements[index].click();
+  }
+
+  async filterPublishedPosts() {
+    await this.page.getByRole("button", { name: "All posts" }).click();
+    await this.page.getByText("Published posts").click();
   }
 }

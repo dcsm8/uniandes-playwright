@@ -14,11 +14,27 @@ test.describe("Posts", () => {
     await loginPage.login(config.email, config.password);
   });
 
-  test("Crear un nuevo post", async () => {
+  test("Crear post", async () => {
+    const title = "My Updated Post Title";
+    const content = "My Updated Post Content";
+
     await postPage.navigateToPostEditor();
-    await postPage.fillPostTitle("My new Post Title");
-    await postPage.fillPostContent("My new Post Content");
+    await postPage.fillPostTitle(title);
+    await postPage.fillPostContent(content);
     await postPage.publishPost();
     await postPage.expectNotificationShown("Published");
+  });
+
+  test("Actualizar post", async () => {
+    const updatedTitle = "My Updated Post Title";
+    const updatedContent = "My Updated Post Content";
+
+    await postPage.navigateToPostList();
+    await postPage.filterPublishedPosts();
+    await postPage.selectPostByIndex(0);
+    await postPage.fillPostTitle(updatedTitle);
+    await postPage.fillPostContent(updatedContent);
+    await postPage.publishUpdatedPost();
+    await postPage.expectNotificationShown("Updated");
   });
 });

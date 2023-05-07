@@ -16,10 +16,16 @@ export class LoginPage {
     await this.page.fill('input[name="identification"]', email);
     await this.page.fill('input[name="password"]', password);
     await this.page.click('button[type="submit"]');
+    await this.page.waitForSelector('a[href="#/site/"]');
+  }
+
+  async loginAttempt(email: string, password: string) {
+    await this.page.fill('input[name="identification"]', email);
+    await this.page.fill('input[name="password"]', password);
+    await this.page.click('button[type="submit"]');
   }
 
   async expectSuccessfulLogin(page: Page) {
-    await page.waitForSelector('a[href="#/site/"]');
     const url = page.url();
     expect(url).toContain("/ghost/#/site");
   }

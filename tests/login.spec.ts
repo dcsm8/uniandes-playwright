@@ -16,7 +16,7 @@ test.describe("Login", () => {
   });
 
   test("Iniciar sesión con credenciales inválidas", async ({ page }) => {
-    await loginPage.login("invalid@example.com", "invalid_password");
+    await loginPage.loginAttempt("invalid@example.com", "invalid_password");
     await loginPage.expectFailedLogin(page);
   });
 });

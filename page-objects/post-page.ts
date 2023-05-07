@@ -8,6 +8,43 @@ export class PostPage {
     this.page = page;
   }
 
+  async createPost(title: string, content: string): Promise<string> {
+    await this.navigateToPostEditor();
+    await this.fillPostTitle(title);
+    await this.fillPostContent(content);
+    await this.publishPost();
+    const postId = await this.getPostIdFromUrl();
+    return postId;
+  }
+
+  async updatePost() {
+    await this.page.getByRole("button", { name: "Update" }).click();
+    await this.page.getByRole("button", { name: "Update", exact: true }).click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async deletePost() {
+    await this.page.getByRole("button", { name: "Settings" }).click();
+    await this.page.getByRole("button", { name: "Delete post" }).click();
+    await this.page.click(".gh-btn.gh-btn-red.gh-btn-icon");
+  }
+
+  async updatePostById(postId: string, updatedPost: { title: string; content: string }): Promise<void> {
+    await this.navigateToPostById(postId);
+    await this.fillPostTitle(updatedPost.title);
+    await this.fillPostContent(updatedPost.content);
+    await this.updatePost();
+  }
+
+  async deletePostById(postId: string): Promise<void> {
+    await this.navigateToPostById(postId);
+    await this.deletePost();
+  }
+
+  async navigateToPostById(postId: string) {
+    await this.page.goto(`${config.baseUrl}/ghost/#/editor/post/${postId}`);
+  }
+
   async navigateToPostList() {
     await this.page.goto(`${config.baseUrl}/ghost/#/posts/`);
   }
@@ -16,22 +53,12 @@ export class PostPage {
     await this.page.goto(`${config.baseUrl}/ghost/#/editor/post/`);
   }
 
-  async publishUpdatedPost() {
-    await this.page.getByRole("button", { name: "Update" }).click();
-    await this.page.getByRole("button", { name: "Update", exact: true }).click();
-    await this.page.waitForTimeout(1000);
-  }
-
-  async expectPostUpdatedSuccessfully(updatedTitle: string) {
-    await this.page.waitForSelector(`.gh-content-entry-title:has-text("${updatedTitle}")`);
-    const postTitleElement = await this.page.$(`.gh-content-entry-title:has-text("${updatedTitle}")`);
-    expect(postTitleElement).toBeTruthy();
-  }
-
-  async getPostListLength(): Promise<number> {
-    await this.page.waitForSelector(".posts-list");
-    const listElements = await this.page.$$(".gh-posts-list-item");
-    return listElements.length;
+  async getPostIdFromUrl(): Promise<string> {
+    const currentUrl = await this.page.url();
+    const url = new URL(currentUrl);
+    const fragments = url.hash.split("/");
+    const postId = fragments[fragments.length - 1];
+    return postId;
   }
 
   async fillPostTitle(title: string) {
@@ -56,14 +83,21 @@ export class PostPage {
     expect(notificationElement).toBeTruthy();
   }
 
-  async selectPostByIndex(index: number) {
-    await this.page.waitForSelector(".posts-list");
-    const postElements = await this.page.$$(".gh-posts-list-item");
-    await postElements[index].click();
+  async getErrorMessageText(): Promise<string | null> {
+    return await this.page.textContent(".midlightgrey.error-code-size");
   }
 
-  async filterPublishedPosts() {
-    await this.page.getByRole("button", { name: "All posts" }).click();
-    await this.page.getByText("Published posts").click();
+  async getPostTitle(): Promise<string | null> {
+    const titleElement = await this.page.locator(".gh-editor-title");
+    return await titleElement.evaluate((el) => (el as HTMLTextAreaElement).value);
+  }
+
+  async getPostContent(): Promise<string | null> {
+    return await this.page.locator(".koenig-editor__editor").textContent();
+  }
+
+  async expectPostStatus(status: string) {
+    const draftElement = this.page.locator("header").getByText(status);
+    await expect(draftElement).toBeVisible();
   }
 }

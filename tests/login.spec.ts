@@ -15,8 +15,19 @@ test.describe("Login", () => {
     await loginPage.expectSuccessfulLogin(page);
   });
 
-  test("Iniciar sesión con credenciales inválidas", async ({ page }) => {
-    await loginPage.loginAttempt("invalid@example.com", "invalid_password");
+  test("Iniciar sesión con contraseña incorrecta", async ({ page }) => {
+    await loginPage.loginAttempt(config.email, "incorrect_password");
     await loginPage.expectFailedLogin(page);
+  });
+
+  test("Iniciar sesión con correo y contraseña en blanco", async ({ page }) => {
+    await loginPage.loginAttempt("", "");
+    await loginPage.expectFailedLogin(page);
+  });
+
+  test("Cerrar sesión", async ({ page }) => {
+    await loginPage.login(config.email, config.password);
+    await loginPage.signout();
+    await loginPage.expectSuccessfulSignout();
   });
 });

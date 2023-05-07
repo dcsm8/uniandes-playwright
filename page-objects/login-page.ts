@@ -34,4 +34,13 @@ export class LoginPage {
     const errorMessage = await page.waitForSelector(".gh-btn-red");
     expect(errorMessage).toBeTruthy();
   }
+
+  async signout() {
+    await this.page.goto(`${config.baseUrl}/ghost/#/signout`);
+  }
+
+  async expectSuccessfulSignout() {
+    const loggedInElement = await this.page.$("#logged-in-message");
+    expect(loggedInElement).toBeNull();
+  }
 }

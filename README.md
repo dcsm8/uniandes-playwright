@@ -63,9 +63,9 @@ npm install
 
 ```javascript
 export const config = {
-  baseUrl: "http://localhost:3001", <---- Update this
-  email: "dc.sanchezm1@uniandes.edu.co", <---- Update this
-  password: "$ArQ^P$Unuzj69", <---- Update this
+  baseUrl: "http://localhost:3001", // <---- Update this
+  email: "dc.sanchezm1@uniandes.edu.co", // <---- Update this
+  password: "$ArQ^P$Unuzj69", // <---- Update this
 };
 ```
 

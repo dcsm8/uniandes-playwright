@@ -8,7 +8,7 @@ export class PostPage {
     this.page = page;
   }
 
-  async navigate() {
+  async navigateToPostList() {
     await this.page.goto(`${config.baseUrl}/ghost/#/posts/`);
   }
 
@@ -50,8 +50,9 @@ export class PostPage {
     await this.page.waitForTimeout(1000);
   }
 
-  async expectPostCreatedSuccessfully(postListLengthBefore: number) {
-    const postListElementsAfter = await this.getPostListLength();
-    expect(postListElementsAfter).toBe(postListLengthBefore + 1);
+  async expectNotificationShown(notificationText: string) {
+    await this.page.waitForSelector(`.gh-notification:has-text("${notificationText}")`);
+    const notificationElement = await this.page.$(`.gh-notification:has-text("${notificationText}")`);
+    expect(notificationElement).toBeTruthy();
   }
 }

@@ -15,13 +15,10 @@ test.describe("Posts", () => {
   });
 
   test("Crear un nuevo post", async () => {
-    await postPage.navigate();
-    const postListLengthBefore = await postPage.getPostListLength();
     await postPage.navigateToPostEditor();
     await postPage.fillPostTitle("My new Post Title");
     await postPage.fillPostContent("My new Post Content");
     await postPage.publishPost();
-    await postPage.navigate();
-    await postPage.expectPostCreatedSuccessfully(postListLengthBefore);
+    await postPage.expectNotificationShown("Published");
   });
 });

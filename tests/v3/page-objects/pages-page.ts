@@ -1,5 +1,5 @@
 import { Page, expect } from "@playwright/test";
-import { config } from "../../../config";
+import config from "./config.json";
 
 export class PagesPage {
   private page: Page;

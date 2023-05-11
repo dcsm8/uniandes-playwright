@@ -3,9 +3,18 @@ import config from "./config.json";
 
 export class TagPage {
   private page: Page;
+  private screenshotBasePath: string;
+  public testName: string;
+  private feature = "tags";
 
   constructor(page: Page) {
     this.page = page;
+    this.screenshotBasePath = `./screenshots/${config.version}/${this.feature}`;
+  }
+
+  async takeScreenshot(stepName: string) {
+    const screenshotPath = `${this.screenshotBasePath}/${this.testName}-${stepName}.png`;
+    await this.page.screenshot({ path: screenshotPath });
   }
 
   async createTag(name: string, description: string): Promise<string> {
@@ -15,12 +24,6 @@ export class TagPage {
     await this.saveTag();
     const tagId = await this.getTagIdFromUrl();
     return tagId;
-  }
-
-  async deleteTag() {
-    await this.page.getByRole("button", { name: "Delete tag" }).click();
-    const deleteButton = await this.page.$("div.modal-footer button:nth-child(2)");
-    await deleteButton?.click();
   }
 
   async updateTagById(tagId: string, updatedTag: { name: string; description: string }): Promise<void> {
@@ -35,12 +38,39 @@ export class TagPage {
     await this.deleteTag();
   }
 
+  async deleteTag() {
+    await this.page.getByRole("button", { name: "Delete tag" }).click();
+    const deleteButton = await this.page.$("div.modal-footer button:nth-child(2)");
+    await deleteButton?.click();
+    await this.takeScreenshot("deleteTag");
+  }
+
   async navigateToTagById(tagId: string) {
     await this.page.goto(`${config.baseUrl}/ghost/#/tags/${tagId}`);
+    await this.page.waitForTimeout(1000);
+    await this.takeScreenshot("navigateToTagById");
   }
 
   async navigateToTagEditor() {
     await this.page.goto(`${config.baseUrl}/ghost/#/tags/new`);
+    await this.takeScreenshot("navigateToTagEditor");
+  }
+
+  async fillTagName(name: string) {
+    await this.page.getByLabel("Name").click();
+    await this.page.getByLabel("Name").fill(name);
+    await this.takeScreenshot("fillTagName");
+  }
+
+  async fillTagDescription(description: string) {
+    await this.page.getByLabel("Description").click();
+    await this.page.getByLabel("Description").fill(description);
+    await this.takeScreenshot("fillTagDescription");
+  }
+
+  async saveTag() {
+    await this.page.getByRole("button", { name: "Save" }).click();
+    await this.takeScreenshot("saveTag");
   }
 
   async getTagIdFromUrl(): Promise<string> {
@@ -49,21 +79,6 @@ export class TagPage {
     const fragments = url.hash.split("/");
     const tagId = fragments[fragments.length - 1];
     return tagId;
-  }
-
-  async fillTagName(name: string) {
-    await this.page.getByLabel("Name").click();
-    await this.page.getByLabel("Name").fill(name);
-  }
-
-  async fillTagDescription(description: string) {
-    await this.page.getByLabel("Description").click();
-    await this.page.getByLabel("Description").fill(description);
-  }
-
-  async saveTag() {
-    await this.page.getByRole("button", { name: "Save" }).click();
-    await this.page.waitForTimeout(1000);
   }
 
   async getErrorMessageText(): Promise<string | null> {

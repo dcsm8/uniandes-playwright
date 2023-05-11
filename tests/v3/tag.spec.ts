@@ -13,12 +13,14 @@ test.describe("Tags", () => {
     // Given
     loginPage = new LoginPage(page);
     tagPage = new TagPage(page);
+    tagPage.testName = "before-each";
     await loginPage.navigate();
     await loginPage.login();
     tagId = await tagPage.createTag(name, description);
   });
 
   test("Create tag", async () => {
+    tagPage.testName = "create-tag";
     // When
     await tagPage.createTag(name, description);
 
@@ -27,6 +29,7 @@ test.describe("Tags", () => {
   });
 
   test("Update tag", async () => {
+    tagPage.testName = "update-tag";
     // Given
     const updatedTag = { name: "Updated Name", description: "Updated Description" };
 
@@ -38,6 +41,7 @@ test.describe("Tags", () => {
   });
 
   test("Delete tag", async () => {
+    tagPage.testName = "delete-tag";
     // When
     await tagPage.deleteTagById(tagId);
     await tagPage.navigateToTagById(tagId);
@@ -48,6 +52,7 @@ test.describe("Tags", () => {
   });
 
   test("Read tag", async () => {
+    tagPage.testName = "read-tag";
     // When
     await tagPage.navigateToTagById(tagId);
 

@@ -4,13 +4,11 @@ import { config } from "../config";
 export class LoginPage {
   private page: Page;
 
-  private email: string;
-  private password: string;
+  private email = config.email;
+  private password = config.password;
 
   constructor(page: Page) {
     this.page = page;
-    this.email = config.email;
-    this.password = config.password;
   }
 
   async navigate() {

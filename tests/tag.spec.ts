@@ -11,6 +11,7 @@ test.describe("Tags", () => {
   const description = "New Description";
 
   test.beforeEach(async ({ page }) => {
+    // Given
     loginPage = new LoginPage(page);
     tagPage = new TagPage(page);
     await loginPage.navigate();
@@ -18,27 +19,40 @@ test.describe("Tags", () => {
     tagId = await tagPage.createTag(name, description);
   });
 
-  test("Crear tag", async () => {
+  test("Create tag", async () => {
+    // When
     await tagPage.createTag(name, description);
+
+    // Then
     await tagPage.expectTagStatus("Saved");
   });
 
-  test("Actualizar tag", async () => {
+  test("Update tag", async () => {
+    // Given
     const updatedTag = { name: "Updated Name", description: "Updated Description" };
+
+    // When
     await tagPage.updateTagById(tagId, updatedTag);
+
+    // Then
     await tagPage.expectTagStatus("Saved");
   });
 
-  test("Eliminar tag", async () => {
+  test("Delete tag", async () => {
+    // When
     await tagPage.deleteTagById(tagId);
     await tagPage.navigateToTagById(tagId);
 
+    // Then
     const errorCode = await tagPage.getErrorMessageText();
     expect(errorCode).toBe("404");
   });
 
-  test("Leer tag", async () => {
+  test("Read tag", async () => {
+    // When
     await tagPage.navigateToTagById(tagId);
+
+    // Then
     const tagName = await tagPage.getTagName();
     const tagDescription = await tagPage.getTagDescription();
     expect(tagName).toBe(name);

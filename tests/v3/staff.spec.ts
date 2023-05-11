@@ -11,11 +11,13 @@ test.describe("Staff", () => {
     // Given
     loginPage = new LoginPage(page);
     staffPage = new StaffPage(page);
+    staffPage.testName = "before-each";
     await loginPage.navigate();
     await loginPage.login();
   });
 
   test("Consult user data", async ({ page }) => {
+    staffPage.testName = "consult-user-data";
     // Given
     const slug = "ghost";
 
@@ -28,6 +30,7 @@ test.describe("Staff", () => {
   });
 
   test("Update user data", async ({ page }) => {
+    staffPage.testName = "update-user-data";
     // When
     await staffPage.navigateBySlug("ghost");
     await staffPage.updateStaffName(faker.internet.userName(), faker.internet.email());

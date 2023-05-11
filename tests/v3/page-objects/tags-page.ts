@@ -40,8 +40,7 @@ export class TagPage {
 
   async deleteTag() {
     await this.page.getByRole("button", { name: "Delete tag" }).click();
-    const deleteButton = await this.page.$("div.modal-footer button:nth-child(2)");
-    await deleteButton?.click();
+    await this.page.click(".gh-btn.gh-btn-red.gh-btn-icon.ember-view");
     await this.takeScreenshot("deleteTag");
   }
 

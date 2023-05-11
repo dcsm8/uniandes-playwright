@@ -71,6 +71,7 @@ export class PostPage {
 
   async navigateToPostById(postId: string) {
     await this.page.goto(`${config.baseUrl}/ghost/#/editor/post/${postId}`);
+    await this.page.waitForTimeout(1000);
     await this.takeScreenshot("navigateToPostById");
   }
 

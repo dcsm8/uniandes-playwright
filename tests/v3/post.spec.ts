@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "../page-objects/login-page";
-import { PostPage } from "../page-objects/posts-page";
+import { LoginPage } from "./page-objects/login-page";
+import { PostPage } from "./page-objects/posts-page";
 
 test.describe("Posts", () => {
   let loginPage: LoginPage;

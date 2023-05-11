@@ -1,77 +1,77 @@
 import { Page, expect } from "@playwright/test";
-import { config } from "../config";
+import { config } from "../../../config";
 
-export class PagesPage {
+export class PostPage {
   private page: Page;
 
   constructor(page: Page) {
     this.page = page;
   }
 
-  async createPage(title: string, content: string): Promise<string> {
-    await this.navigateToPageEditor();
-    await this.fillPageTitle(title);
-    await this.fillPageContent(content);
-    await this.publishPage();
-    const pageId = await this.getPageIdFromUrl();
-    return pageId;
+  async createPost(title: string, content: string): Promise<string> {
+    await this.navigateToPostEditor();
+    await this.fillPostTitle(title);
+    await this.fillPostContent(content);
+    await this.publishPost();
+    const postId = await this.getPostIdFromUrl();
+    return postId;
   }
 
-  async updatePage() {
+  async updatePost() {
     await this.page.getByRole("button", { name: "Update" }).click();
     await this.page.getByRole("button", { name: "Update", exact: true }).click();
     await this.page.waitForTimeout(1000);
   }
 
-  async deletePage() {
+  async deletePost() {
     await this.page.getByRole("button", { name: "Settings" }).click();
-    await this.page.getByRole("button", { name: "Delete page" }).click();
+    await this.page.getByRole("button", { name: "Delete post" }).click();
     await this.page.click(".gh-btn.gh-btn-red.gh-btn-icon");
   }
 
-  async updatePageById(pageId: string, updatedPage: { title: string; content: string }): Promise<void> {
-    await this.navigateToPageById(pageId);
-    await this.fillPageTitle(updatedPage.title);
-    await this.fillPageContent(updatedPage.content);
-    await this.updatePage();
+  async updatePostById(postId: string, updatedPost: { title: string; content: string }): Promise<void> {
+    await this.navigateToPostById(postId);
+    await this.fillPostTitle(updatedPost.title);
+    await this.fillPostContent(updatedPost.content);
+    await this.updatePost();
   }
 
-  async deletePageById(pageId: string): Promise<void> {
-    await this.navigateToPageById(pageId);
-    await this.deletePage();
+  async deletePostById(postId: string): Promise<void> {
+    await this.navigateToPostById(postId);
+    await this.deletePost();
   }
 
-  async navigateToPageById(pageId: string) {
-    await this.page.goto(`${config.baseUrl}/ghost/#/editor/page/${pageId}`);
+  async navigateToPostById(postId: string) {
+    await this.page.goto(`${config.baseUrl}/ghost/#/editor/post/${postId}`);
   }
 
-  async navigateToPageList() {
-    await this.page.goto(`${config.baseUrl}/ghost/#/pages/`);
+  async navigateToPostList() {
+    await this.page.goto(`${config.baseUrl}/ghost/#/posts/`);
   }
 
-  async navigateToPageEditor() {
-    await this.page.goto(`${config.baseUrl}/ghost/#/editor/page/`);
+  async navigateToPostEditor() {
+    await this.page.goto(`${config.baseUrl}/ghost/#/editor/post/`);
   }
 
-  async getPageIdFromUrl(): Promise<string> {
+  async getPostIdFromUrl(): Promise<string> {
     const currentUrl = await this.page.url();
     const url = new URL(currentUrl);
     const fragments = url.hash.split("/");
-    const pageId = fragments[fragments.length - 1];
-    return pageId;
+    const postId = fragments[fragments.length - 1];
+    return postId;
   }
 
-  async fillPageTitle(title: string) {
-    await this.page.getByPlaceholder("Page Title").click();
-    await this.page.getByPlaceholder("Page Title").fill(title);
+  async fillPostTitle(title: string) {
+    await this.page.getByPlaceholder("Post Title").click();
+    await this.page.getByPlaceholder("Post Title").fill(title);
   }
 
-  async fillPageContent(content: string) {
+  async fillPostContent(content: string) {
     await this.page.locator(".koenig-editor__editor").click();
     await this.page.locator(".koenig-editor__editor").fill(content);
   }
 
-  async publishPage() {
+  async publishPost() {
     await this.page.getByRole("button", { name: "Publish" }).click();
     await this.page.getByRole("button", { name: "Publish", exact: true }).click();
     await this.page.waitForTimeout(1000);
@@ -87,16 +87,16 @@ export class PagesPage {
     return await this.page.textContent(".midlightgrey.error-code-size");
   }
 
-  async getPageTitle(): Promise<string | null> {
+  async getPostTitle(): Promise<string | null> {
     const titleElement = await this.page.locator(".gh-editor-title");
     return await titleElement.evaluate((el) => (el as HTMLTextAreaElement).value);
   }
 
-  async getPageContent(): Promise<string | null> {
+  async getPostContent(): Promise<string | null> {
     return await this.page.locator(".koenig-editor__editor").textContent();
   }
 
-  async expectPageStatus(status: string) {
+  async expectPostStatus(status: string) {
     const draftElement = this.page.locator("header").getByText(status);
     await expect(draftElement).toBeVisible();
   }

@@ -1,0 +1,119 @@
+import { Page, expect } from "@playwright/test";
+import { config } from "../../../config";
+
+export class PagesPage {
+  private page: Page;
+  private screenshotBasePath: string;
+  public testName: string;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.screenshotBasePath = `./screenshots/${config.version}/pages`;
+  }
+
+  async takeScreenshot(stepName: string) {
+    const screenshotPath = `${this.screenshotBasePath}/${this.testName}-${stepName}.png`;
+    await this.page.screenshot({ path: screenshotPath });
+  }
+
+  async createPage(title: string, content: string): Promise<string> {
+    await this.navigateToPageEditor();
+    await this.fillPageTitle(title);
+    await this.fillPageContent(content);
+    await this.publishPage();
+    const pageId = await this.getPageIdFromUrl();
+    return pageId;
+  }
+
+  async updatePageById(pageId: string, updatedPage: { title: string; content: string }): Promise<void> {
+    await this.navigateToPageById(pageId);
+    await this.fillPageTitle(updatedPage.title);
+    await this.fillPageContent(updatedPage.content);
+    await this.updatePage();
+  }
+
+  async deletePageById(pageId: string): Promise<void> {
+    await this.navigateToPageById(pageId);
+    await this.deletePage();
+  }
+
+  async updatePage() {
+    await this.page.getByRole("button", { name: "Update" }).click();
+    await this.page.getByRole("button", { name: "Update", exact: true }).click();
+    await this.page.waitForTimeout(1000);
+    await this.takeScreenshot("updatePage");
+  }
+
+  async deletePage() {
+    await this.page.getByRole("button", { name: "Settings" }).click();
+    await this.page.getByRole("button", { name: "Delete page" }).click();
+    await this.page.click(".gh-btn.gh-btn-red.gh-btn-icon");
+    await this.takeScreenshot("deletePage");
+  }
+
+  async navigateToPageById(pageId: string) {
+    await this.page.goto(`${config.baseUrl}/ghost/#/editor/page/${pageId}`);
+    await this.page.waitForTimeout(1000);
+    await this.takeScreenshot("navigateToPageById");
+  }
+
+  async navigateToPageList() {
+    await this.page.goto(`${config.baseUrl}/ghost/#/pages/`);
+    await this.takeScreenshot("navigateToPageList");
+  }
+
+  async navigateToPageEditor() {
+    await this.page.goto(`${config.baseUrl}/ghost/#/editor/page/`);
+    await this.takeScreenshot("navigateToPageEditor");
+  }
+
+  async fillPageTitle(title: string) {
+    await this.page.getByPlaceholder("Page Title").click();
+    await this.page.getByPlaceholder("Page Title").fill(title);
+    await this.takeScreenshot("fillPageTitle");
+  }
+
+  async fillPageContent(content: string) {
+    await this.page.locator(".koenig-editor__editor").click();
+    await this.page.locator(".koenig-editor__editor").fill(content);
+    await this.takeScreenshot("fillPageContent");
+  }
+
+  async publishPage() {
+    await this.page.getByRole("button", { name: "Publish" }).click();
+    await this.page.getByRole("button", { name: "Publish", exact: true }).click();
+    await this.takeScreenshot("publishPage");
+  }
+
+  async getPageIdFromUrl(): Promise<string> {
+    const currentUrl = await this.page.url();
+    const url = new URL(currentUrl);
+    const fragments = url.hash.split("/");
+    const pageId = fragments[fragments.length - 1];
+    return pageId;
+  }
+
+  async getErrorMessageText(): Promise<string | null> {
+    return await this.page.textContent(".midlightgrey.error-code-size");
+  }
+
+  async getPageTitle(): Promise<string | null> {
+    const titleElement = await this.page.locator(".gh-editor-title");
+    return await titleElement.evaluate((el) => (el as HTMLTextAreaElement).value);
+  }
+
+  async getPageContent(): Promise<string | null> {
+    return await this.page.locator(".koenig-editor__editor").textContent();
+  }
+
+  async expectPageStatus(status: string) {
+    const draftElement = this.page.locator("header").getByText(status);
+    await expect(draftElement).toBeVisible();
+  }
+
+  async expectNotificationShown(notificationText: string) {
+    await this.page.waitForSelector(`.gh-notification:has-text("${notificationText}")`);
+    const notificationElement = await this.page.$(`.gh-notification:has-text("${notificationText}")`);
+    expect(notificationElement).toBeTruthy();
+  }
+}

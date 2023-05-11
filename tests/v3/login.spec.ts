@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
-import { LoginPage } from "../page-objects/login-page";
+import { LoginPage } from "./page-objects/login-page";
 
-test.describe("Given the login page", () => {
+test.describe("Login", () => {
   let loginPage: LoginPage;
 
   test.beforeEach(async ({ page }) => {

@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "../page-objects/login-page";
-import { StaffPage } from "../page-objects/staff-page";
+import { LoginPage } from "./page-objects/login-page";
+import { StaffPage } from "./page-objects/staff-page";
 import { faker } from "@faker-js/faker";
 
 test.describe("Staff", () => {

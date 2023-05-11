@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "../page-objects/login-page";
-import { PagesPage } from "../page-objects/pages-page";
+import { LoginPage } from "./page-objects/login-page";
+import { PagesPage } from "./page-objects/pages-page";
 
 test.describe("Pages", () => {
   let loginPage: LoginPage;
@@ -13,12 +13,15 @@ test.describe("Pages", () => {
     // Given
     loginPage = new LoginPage(page);
     pagesPage = new PagesPage(page);
+    pagesPage.testName = "before-each";
     await loginPage.navigate();
     await loginPage.login();
     pageId = await pagesPage.createPage(title, content);
   });
 
   test("Create page", async () => {
+    pagesPage.testName = "create-page";
+
     // When
     await pagesPage.createPage(title, content);
 
@@ -28,6 +31,8 @@ test.describe("Pages", () => {
   });
 
   test("Update page", async () => {
+    pagesPage.testName = "update-page";
+
     // Given
     const updatedPage = { title: "Updated Title", content: "Updated Content" };
 
@@ -39,6 +44,8 @@ test.describe("Pages", () => {
   });
 
   test("Delete page", async () => {
+    pagesPage.testName = "delete-page";
+
     // When
     await pagesPage.deletePageById(pageId);
     await pagesPage.navigateToPageById(pageId);
@@ -49,6 +56,8 @@ test.describe("Pages", () => {
   });
 
   test("Read page", async () => {
+    pagesPage.testName = "read-page";
+
     // When
     await pagesPage.navigateToPageById(pageId);
 
@@ -60,6 +69,8 @@ test.describe("Pages", () => {
   });
 
   test("Create draft", async () => {
+    pagesPage.testName = "create-draft";
+
     // Given
     const pageTitle = "New Title";
     const pageContent = "New Content";

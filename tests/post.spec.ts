@@ -11,6 +11,7 @@ test.describe("Posts", () => {
   const content = "New Content";
 
   test.beforeEach(async ({ page }) => {
+    // Given
     loginPage = new LoginPage(page);
     postPage = new PostPage(page);
     await loginPage.navigate();
@@ -18,40 +19,58 @@ test.describe("Posts", () => {
     postId = await postPage.createPost(title, content);
   });
 
-  test("Crear post", async () => {
+  test("Create post", async () => {
+    // When
     await postPage.createPost(title, content);
+
+    // Then
     await postPage.expectNotificationShown("Published");
     await postPage.expectPostStatus("Published");
   });
 
-  test("Actualizar post", async () => {
+  test("Update post", async () => {
+    // Given
     const updatedPost = { title: "Updated Title", content: "Updated Content" };
+
+    // When
     await postPage.updatePostById(postId, updatedPost);
+
+    // Then
     await postPage.expectNotificationShown("Updated");
   });
 
-  test("Eliminar post", async () => {
+  test("Delete post", async () => {
+    // When
     await postPage.deletePostById(postId);
     await postPage.navigateToPostById(postId);
 
+    // Then
     const errorCode = await postPage.getErrorMessageText();
     expect(errorCode).toBe("404");
   });
 
-  test("Leer post", async () => {
+  test("Read post", async () => {
+    // When
     await postPage.navigateToPostById(postId);
+
+    // Then
     const postTitle = await postPage.getPostTitle();
     const postContent = await postPage.getPostContent();
     expect(postTitle).toBe(title);
     expect(postContent).toBe(content);
   });
 
-  test("Crear borrador", async () => {
+  test("Create draft", async () => {
+    // Given
     const postTitle = "New Title";
     const postContent = "New Content";
+
+    // When
     await postPage.navigateToPostEditor();
     await postPage.fillPostTitle(postTitle);
     await postPage.fillPostContent(postContent);
+
+    // Then
     await postPage.expectPostStatus("Draft");
   });
 });

@@ -9,22 +9,31 @@ test.describe("Staff", () => {
   let staffPage: StaffPage;
 
   test.beforeEach(async ({ page }) => {
+    // Given
     loginPage = new LoginPage(page);
     staffPage = new StaffPage(page);
     await loginPage.navigate();
     await loginPage.login(config.email, config.password);
   });
 
-  test("Consultar datos usuario", async ({ page }) => {
+  test("Consult user data", async ({ page }) => {
+    // Given
     const slug = "ghost";
+
+    // When
     await staffPage.navigateBySlug("ghost");
+
+    // Then
     const currentSlug = await staffPage.getSlug();
     expect(slug).toBe(currentSlug);
   });
 
-  test("Actualizar datos usuario", async ({ page }) => {
+  test("Update user data", async ({ page }) => {
+    // When
     await staffPage.navigateBySlug("ghost");
     await staffPage.updateStaffName(faker.internet.userName(), faker.internet.email());
+
+    // Then
     await staffPage.expectTagStatus("Saved");
   });
 });

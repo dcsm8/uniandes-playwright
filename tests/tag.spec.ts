@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../page-objects/login-page";
 import { TagPage } from "../page-objects/tags-page";
-import { config } from "../page-objects/config";
 
 test.describe("Tags", () => {
   let loginPage: LoginPage;
@@ -15,7 +14,7 @@ test.describe("Tags", () => {
     loginPage = new LoginPage(page);
     tagPage = new TagPage(page);
     await loginPage.navigate();
-    await loginPage.login(config.email, config.password);
+    await loginPage.login();
     tagId = await tagPage.createTag(name, description);
   });
 

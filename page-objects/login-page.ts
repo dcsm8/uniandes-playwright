@@ -1,27 +1,32 @@
 import { Page, expect } from "@playwright/test";
-import { config } from "./config";
+import { config } from "../config";
 
 export class LoginPage {
   private page: Page;
 
+  private email: string;
+  private password: string;
+
   constructor(page: Page) {
     this.page = page;
+    this.email = config.email;
+    this.password = config.password;
   }
 
   async navigate() {
     await this.page.goto(`${config.baseUrl}/ghost/#/signin`);
   }
 
-  async login(email: string, password: string) {
-    await this.page.fill('input[name="identification"]', email);
-    await this.page.fill('input[name="password"]', password);
+  async login() {
+    await this.page.fill('input[name="identification"]', this.email);
+    await this.page.fill('input[name="password"]', this.password);
     await this.page.click('button[type="submit"]');
     await this.page.waitForSelector('a[href="#/site/"]');
   }
 
-  async loginAttempt(email: string, password: string) {
-    await this.page.fill('input[name="identification"]', email);
-    await this.page.fill('input[name="password"]', password);
+  async loginAttempt() {
+    await this.page.fill('input[name="identification"]', this.email);
+    await this.page.fill('input[name="password"]', this.password);
     await this.page.click('button[type="submit"]');
   }
 
@@ -31,7 +36,7 @@ export class LoginPage {
   }
 
   async expectFailedLogin(page: Page) {
-    const errorMessage = await page.waitForSelector(".gh-btn-red");
+    const errorMessage = await page.waitForSelector(".main-error");
     expect(errorMessage).toBeTruthy();
   }
 

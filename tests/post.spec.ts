@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../page-objects/login-page";
 import { PostPage } from "../page-objects/posts-page";
-import { config } from "../page-objects/config";
 
 test.describe("Posts", () => {
   let loginPage: LoginPage;
@@ -15,7 +14,7 @@ test.describe("Posts", () => {
     loginPage = new LoginPage(page);
     postPage = new PostPage(page);
     await loginPage.navigate();
-    await loginPage.login(config.email, config.password);
+    await loginPage.login();
     postId = await postPage.createPost(title, content);
   });
 

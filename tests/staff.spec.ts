@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../page-objects/login-page";
-import { config } from "../page-objects/config";
 import { StaffPage } from "../page-objects/staff-page";
 import { faker } from "@faker-js/faker";
 
@@ -13,7 +12,7 @@ test.describe("Staff", () => {
     loginPage = new LoginPage(page);
     staffPage = new StaffPage(page);
     await loginPage.navigate();
-    await loginPage.login(config.email, config.password);
+    await loginPage.login();
   });
 
   test("Consult user data", async ({ page }) => {

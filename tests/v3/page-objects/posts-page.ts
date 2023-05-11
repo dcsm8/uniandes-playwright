@@ -3,30 +3,18 @@ import config from "./config.json";
 
 export class PostPage {
   private page: Page;
+  private screenshotBasePath: string;
+  public testName: string;
+  private feature = "posts";
 
   constructor(page: Page) {
     this.page = page;
+    this.screenshotBasePath = `./screenshots/${config.version}/${this.feature}`;
   }
 
-  async createPost(title: string, content: string): Promise<string> {
-    await this.navigateToPostEditor();
-    await this.fillPostTitle(title);
-    await this.fillPostContent(content);
-    await this.publishPost();
-    const postId = await this.getPostIdFromUrl();
-    return postId;
-  }
-
-  async updatePost() {
-    await this.page.getByRole("button", { name: "Update" }).click();
-    await this.page.getByRole("button", { name: "Update", exact: true }).click();
-    await this.page.waitForTimeout(1000);
-  }
-
-  async deletePost() {
-    await this.page.getByRole("button", { name: "Settings" }).click();
-    await this.page.getByRole("button", { name: "Delete post" }).click();
-    await this.page.click(".gh-btn.gh-btn-red.gh-btn-icon");
+  async takeScreenshot(stepName: string) {
+    const screenshotPath = `${this.screenshotBasePath}/${this.testName}-${stepName}.png`;
+    await this.page.screenshot({ path: screenshotPath });
   }
 
   async updatePostById(postId: string, updatedPost: { title: string; content: string }): Promise<void> {
@@ -41,16 +29,59 @@ export class PostPage {
     await this.deletePost();
   }
 
+  async createPost(title: string, content: string): Promise<string> {
+    await this.navigateToPostEditor();
+    await this.fillPostTitle(title);
+    await this.fillPostContent(content);
+    await this.publishPost();
+    const postId = await this.getPostIdFromUrl();
+    return postId;
+  }
+
+  async fillPostTitle(title: string) {
+    await this.page.getByPlaceholder("Post Title").click();
+    await this.page.getByPlaceholder("Post Title").fill(title);
+    await this.takeScreenshot("fillPostTitle");
+  }
+
+  async fillPostContent(content: string) {
+    await this.page.locator(".koenig-editor__editor").click();
+    await this.page.locator(".koenig-editor__editor").fill(content);
+    await this.takeScreenshot("fillPostContent");
+  }
+
+  async publishPost() {
+    await this.page.getByRole("button", { name: "Publish" }).click();
+    await this.page.getByRole("button", { name: "Publish", exact: true }).click();
+    await this.takeScreenshot("publishPost");
+  }
+
+  async updatePost() {
+    await this.page.getByRole("button", { name: "Update" }).click();
+    await this.page.getByRole("button", { name: "Update", exact: true }).click();
+    await this.takeScreenshot("updatePost");
+  }
+
+  async deletePost() {
+    await this.page.getByRole("button", { name: "Settings" }).click();
+    await this.page.getByRole("button", { name: "Delete post" }).click();
+    await this.page.click(".gh-btn.gh-btn-red.gh-btn-icon");
+    await this.takeScreenshot("deletePost");
+  }
+
   async navigateToPostById(postId: string) {
     await this.page.goto(`${config.baseUrl}/ghost/#/editor/post/${postId}`);
+    await this.takeScreenshot("navigateToPostById");
   }
 
   async navigateToPostList() {
     await this.page.goto(`${config.baseUrl}/ghost/#/posts/`);
+    await this.takeScreenshot("navigateToPostList");
   }
 
   async navigateToPostEditor() {
     await this.page.goto(`${config.baseUrl}/ghost/#/editor/post/`);
+    await this.takeScreenshot("navigateToPostEditor");
   }
 
   async getPostIdFromUrl(): Promise<string> {
@@ -59,28 +90,6 @@ export class PostPage {
     const fragments = url.hash.split("/");
     const postId = fragments[fragments.length - 1];
     return postId;
-  }
-
-  async fillPostTitle(title: string) {
-    await this.page.getByPlaceholder("Post Title").click();
-    await this.page.getByPlaceholder("Post Title").fill(title);
-  }
-
-  async fillPostContent(content: string) {
-    await this.page.locator(".koenig-editor__editor").click();
-    await this.page.locator(".koenig-editor__editor").fill(content);
-  }
-
-  async publishPost() {
-    await this.page.getByRole("button", { name: "Publish" }).click();
-    await this.page.getByRole("button", { name: "Publish", exact: true }).click();
-    await this.page.waitForTimeout(1000);
-  }
-
-  async expectNotificationShown(notificationText: string) {
-    await this.page.waitForSelector(`.gh-notification:has-text("${notificationText}")`);
-    const notificationElement = await this.page.$(`.gh-notification:has-text("${notificationText}")`);
-    expect(notificationElement).toBeTruthy();
   }
 
   async getErrorMessageText(): Promise<string | null> {
@@ -99,5 +108,11 @@ export class PostPage {
   async expectPostStatus(status: string) {
     const draftElement = this.page.locator("header").getByText(status);
     await expect(draftElement).toBeVisible();
+  }
+
+  async expectNotificationShown(notificationText: string) {
+    await this.page.waitForSelector(`.gh-notification:has-text("${notificationText}")`);
+    const notificationElement = await this.page.$(`.gh-notification:has-text("${notificationText}")`);
+    expect(notificationElement).toBeTruthy();
   }
 }

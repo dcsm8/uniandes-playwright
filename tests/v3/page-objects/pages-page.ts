@@ -5,10 +5,11 @@ export class PagesPage {
   private page: Page;
   private screenshotBasePath: string;
   public testName: string;
+  private feature = "pages";
 
   constructor(page: Page) {
     this.page = page;
-    this.screenshotBasePath = `./screenshots/${config.version}/pages`;
+    this.screenshotBasePath = `./screenshots/${config.version}/${this.feature}`;
   }
 
   async takeScreenshot(stepName: string) {

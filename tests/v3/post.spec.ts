@@ -13,12 +13,14 @@ test.describe("Posts", () => {
     // Given
     loginPage = new LoginPage(page);
     postPage = new PostPage(page);
+    postPage.testName = "before-each";
     await loginPage.navigate();
     await loginPage.login();
     postId = await postPage.createPost(title, content);
   });
 
   test("Create post", async () => {
+    postPage.testName = "create-page";
     // When
     await postPage.createPost(title, content);
 
@@ -28,6 +30,7 @@ test.describe("Posts", () => {
   });
 
   test("Update post", async () => {
+    postPage.testName = "update-post";
     // Given
     const updatedPost = { title: "Updated Title", content: "Updated Content" };
 
@@ -39,6 +42,7 @@ test.describe("Posts", () => {
   });
 
   test("Delete post", async () => {
+    postPage.testName = "delete-post";
     // When
     await postPage.deletePostById(postId);
     await postPage.navigateToPostById(postId);
@@ -49,6 +53,7 @@ test.describe("Posts", () => {
   });
 
   test("Read post", async () => {
+    postPage.testName = "read-post";
     // When
     await postPage.navigateToPostById(postId);
 
@@ -60,6 +65,7 @@ test.describe("Posts", () => {
   });
 
   test("Create draft", async () => {
+    postPage.testName = "create-draft";
     // Given
     const postTitle = "New Title";
     const postContent = "New Content";

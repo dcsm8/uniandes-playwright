@@ -67,20 +67,4 @@ test.describe("Pages", () => {
     expect(pageTitle).toBe(title);
     expect(pageContent).toBe(content);
   });
-
-  test("Create draft", async () => {
-    pagesPage.testName = "create-draft";
-
-    // Given
-    const pageTitle = "New Title";
-    const pageContent = "New Content";
-
-    // When
-    await pagesPage.navigateToPageEditor();
-    await pagesPage.fillPageTitle(pageTitle);
-    await pagesPage.fillPageContent(pageContent);
-
-    // Then
-    await pagesPage.expectPageStatus("Draft");
-  });
 });

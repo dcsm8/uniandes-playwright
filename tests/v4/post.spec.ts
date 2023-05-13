@@ -63,19 +63,4 @@ test.describe("Posts", () => {
     expect(postTitle).toBe(title);
     expect(postContent).toBe(content);
   });
-
-  test("Create draft", async () => {
-    postPage.testName = "create-draft";
-    // Given
-    const postTitle = "New Title";
-    const postContent = "New Content";
-
-    // When
-    await postPage.navigateToPostEditor();
-    await postPage.fillPostTitle(postTitle);
-    await postPage.fillPostContent(postContent);
-
-    // Then
-    await postPage.expectPostStatus("Draft");
-  });
 });

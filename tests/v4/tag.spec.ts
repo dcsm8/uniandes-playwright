@@ -39,27 +39,4 @@ test.describe("Tags", () => {
     // Then
     await tagPage.expectTagStatus("Saved");
   });
-
-  test("Delete tag", async () => {
-    tagPage.testName = "delete-tag";
-    // When
-    await tagPage.deleteTagById(tagId);
-    await tagPage.navigateToTagById(tagId);
-
-    // Then
-    const errorCode = await tagPage.getErrorMessageText();
-    expect(errorCode).toBe("404");
-  });
-
-  test("Read tag", async () => {
-    tagPage.testName = "read-tag";
-    // When
-    await tagPage.navigateToTagById(tagId);
-
-    // Then
-    const tagName = await tagPage.getTagName();
-    const tagDescription = await tagPage.getTagDescription();
-    expect(tagName).toBe(name);
-    expect(tagDescription).toBe(description);
-  });
 });

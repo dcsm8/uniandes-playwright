@@ -17,7 +17,7 @@ export class StaffPage {
     await this.page.screenshot({ path: screenshotPath });
   }
 
-  async updateStaffName(name: string, email: string) {
+  async updateStaffData(name: string, email: string) {
     this.fillName(name);
     this.fillEmail(email);
     this.saveStaff();

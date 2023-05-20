@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "./page-objects/login-page";
-import { StaffPage } from "./page-objects/staff-page";
-import { faker } from "@faker-js/faker";
+import { LoginPage } from "../page-objects/login-page";
+import { StaffPage } from "../page-objects/staff-page";
+import { StaffDataGenerator } from "../data-generators/staff-data-generator";
 
-test.describe("Staff", () => {
+test.describe("Staff Apriori", () => {
   let loginPage: LoginPage;
   let staffPage: StaffPage;
 
@@ -19,10 +19,10 @@ test.describe("Staff", () => {
   test("Consult user data", async ({ page }) => {
     staffPage.testName = "consult-user-data";
     // Given
-    const slug = "ghost";
+    const slug = StaffDataGenerator.getValidStaffName();
 
     // When
-    await staffPage.navigateBySlug("ghost");
+    await staffPage.navigateBySlug(slug);
 
     // Then
     const currentSlug = await staffPage.getSlug();
@@ -31,9 +31,13 @@ test.describe("Staff", () => {
 
   test("Update user data", async ({ page }) => {
     staffPage.testName = "update-user-data";
+    // Given
+    const slug = StaffDataGenerator.getValidStaffName();
+    const { username, email } = StaffDataGenerator.getValidStaffData();
+
     // When
-    await staffPage.navigateBySlug("ghost");
-    await staffPage.updateStaffName(faker.internet.userName(), faker.internet.email());
+    await staffPage.navigateBySlug(slug);
+    await staffPage.updateStaffData(username, email);
 
     // Then
     await staffPage.expectTagStatus("Saved");

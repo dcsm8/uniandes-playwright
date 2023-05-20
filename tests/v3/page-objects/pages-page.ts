@@ -81,8 +81,8 @@ export class PagesPage {
   }
 
   async publishPage() {
-    await this.page.getByRole("button", { name: "Publish" }).click();
-    await this.page.getByRole("button", { name: "Publish", exact: true }).click();
+    await this.page.locator(".gh-publishmenu").click();
+    await this.page.locator(".gh-publishmenu-button").click();
     await this.takeScreenshot("publishPage");
   }
 
@@ -113,8 +113,7 @@ export class PagesPage {
   }
 
   async expectNotificationShown(notificationText: string) {
-    await this.page.waitForSelector(`.gh-notification:has-text("${notificationText}")`);
-    const notificationElement = await this.page.$(`.gh-notification:has-text("${notificationText}")`);
+    const notificationElement = await this.page.waitForSelector(`text=${notificationText}`);
     expect(notificationElement).toBeTruthy();
   }
 }

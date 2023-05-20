@@ -1,13 +1,15 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "./page-objects/login-page";
-import { PagesPage } from "./page-objects/pages-page";
+import { LoginPage } from "../page-objects/login-page";
+import { PagesPage } from "../page-objects/pages-page";
+import { PageDataGenerator } from "../data-generators/page-data-generator";
 
-test.describe("Pages", () => {
+test.describe("Pages Apriori", () => {
   let loginPage: LoginPage;
   let pagesPage: PagesPage;
   let pageId: string;
-  const title = "New Title";
-  const content = "New Content";
+
+  // Apriori data generation
+  const { title, content } = PageDataGenerator.getValidPageData();
 
   test.beforeEach(async ({ page }) => {
     // Given
@@ -34,7 +36,7 @@ test.describe("Pages", () => {
     pagesPage.testName = "update-page";
 
     // Given
-    const updatedPage = { title: "Updated Title", content: "Updated Content" };
+    const updatedPage = PageDataGenerator.getValidUpdatedPageData();
 
     // When
     await pagesPage.updatePageById(pageId, updatedPage);
@@ -71,14 +73,10 @@ test.describe("Pages", () => {
   test("Create draft", async () => {
     pagesPage.testName = "create-draft";
 
-    // Given
-    const pageTitle = "New Title";
-    const pageContent = "New Content";
-
     // When
     await pagesPage.navigateToPageEditor();
-    await pagesPage.fillPageTitle(pageTitle);
-    await pagesPage.fillPageContent(pageContent);
+    await pagesPage.fillPageTitle(title);
+    await pagesPage.fillPageContent(content);
 
     // Then
     await pagesPage.expectPageStatus("Draft");

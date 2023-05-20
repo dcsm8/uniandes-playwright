@@ -1,13 +1,13 @@
+import { PostDataGenerator } from "./../data-generators/post-data-generator";
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "./page-objects/login-page";
-import { PostPage } from "./page-objects/posts-page";
+import { LoginPage } from "../page-objects/login-page";
+import { PostPage } from "../page-objects/posts-page";
 
-test.describe("Posts", () => {
+test.describe("Posts Apriori", () => {
   let loginPage: LoginPage;
   let postPage: PostPage;
   let postId: string;
-  const title = "New Title";
-  const content = "New Content";
+  const { title, content } = PostDataGenerator.getValidPostData();
 
   test.beforeEach(async ({ page }) => {
     // Given
@@ -32,7 +32,7 @@ test.describe("Posts", () => {
   test("Update post", async () => {
     postPage.testName = "update-post";
     // Given
-    const updatedPost = { title: "Updated Title", content: "Updated Content" };
+    const updatedPost = PostDataGenerator.getValidUpdatedPostData();
 
     // When
     await postPage.updatePostById(postId, updatedPost);
@@ -66,14 +66,11 @@ test.describe("Posts", () => {
 
   test("Create draft", async () => {
     postPage.testName = "create-draft";
-    // Given
-    const postTitle = "New Title";
-    const postContent = "New Content";
 
     // When
     await postPage.navigateToPostEditor();
-    await postPage.fillPostTitle(postTitle);
-    await postPage.fillPostContent(postContent);
+    await postPage.fillPostTitle(title);
+    await postPage.fillPostContent(content);
 
     // Then
     await postPage.expectPostStatus("Draft");

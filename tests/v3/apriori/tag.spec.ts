@@ -1,13 +1,13 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "./page-objects/login-page";
-import { TagPage } from "./page-objects/tags-page";
+import { LoginPage } from "../page-objects/login-page";
+import { TagPage } from "../page-objects/tags-page";
+import { TagDataGenerator } from "../data-generators/tag-data-generator";
 
-test.describe("Tags", () => {
+test.describe("Tags Apriori", () => {
   let loginPage: LoginPage;
   let tagPage: TagPage;
   let tagId: string;
-  const name = "New Name";
-  const description = "New Description";
+  const { name, description } = TagDataGenerator.getValidTagData();
 
   test.beforeEach(async ({ page }) => {
     // Given
@@ -31,7 +31,7 @@ test.describe("Tags", () => {
   test("Update tag", async () => {
     tagPage.testName = "update-tag";
     // Given
-    const updatedTag = { name: "Updated Name", description: "Updated Description" };
+    const updatedTag = TagDataGenerator.getValidUpdatedTagData();
 
     // When
     await tagPage.updateTagById(tagId, updatedTag);

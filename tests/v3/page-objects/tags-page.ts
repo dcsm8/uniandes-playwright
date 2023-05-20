@@ -39,7 +39,7 @@ export class TagPage {
   }
 
   async deleteTag() {
-    await this.page.getByRole("button", { name: "Delete tag" }).click();
+    await this.page.click('button:has-text("Delete tag")');
     await this.page.click(".gh-btn.gh-btn-red.gh-btn-icon.ember-view");
     await this.takeScreenshot("deleteTag");
   }

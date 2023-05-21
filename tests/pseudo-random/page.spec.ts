@@ -123,10 +123,11 @@ test.describe("Pages Pseudo-Random", () => {
     expect(pageContent).toBe(content);
   });
 
-  test("Create draft with valid data", async () => {
-    pagesPage.testName = "create-draft";
+  test("Create draft with valid data - boundary", async () => {
+    pagesPage.testName = "create-draft-boundary";
+
     // Given
-    pageId = await pagesPage.createPage(title, content);
+    const { title, content } = PageDataGenerator.getBoundaryPageData();
 
     // When
     await pagesPage.navigateToPageEditor();
@@ -135,5 +136,20 @@ test.describe("Pages Pseudo-Random", () => {
 
     // Then
     await pagesPage.expectPageStatus("Draft");
+  });
+
+  test("Fail create draft with data beyond boundary", async () => {
+    pagesPage.testName = "create-draft-boundary";
+
+    // Given
+    const { title, content } = PageDataGenerator.getBoundaryPageDataPlusOne();
+
+    // When
+    await pagesPage.navigateToPageEditor();
+    await pagesPage.fillPageTitle(title);
+    await pagesPage.fillPageContent(content);
+
+    // Then
+    await pagesPage.expectPageStatus("New");
   });
 });

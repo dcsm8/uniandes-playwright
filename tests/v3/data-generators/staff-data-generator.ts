@@ -1,10 +1,10 @@
 import { faker } from "@faker-js/faker";
 
 export class StaffDataGenerator {
-  static getRandomPostData() {
+  static getRandomStaffData() {
     return {
-      title: faker.internet.userName(),
-      content: faker.internet.userName(),
+      username: faker.internet.userName(),
+      email: faker.internet.email(),
     };
   }
 

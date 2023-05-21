@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "../page-objects/login-page";
-import { PagesPage } from "../page-objects/pages-page";
-import { PageDataGenerator } from "../data-generators/page-data-generator";
+import { LoginPage } from "../../page-objects/login-page";
+import { PagesPage } from "../../page-objects/pages-page";
+import { PageDataGenerator } from "../../data-generators/page-data-generator";
 
 test.describe("Pages Apriori", () => {
   let loginPage: LoginPage;

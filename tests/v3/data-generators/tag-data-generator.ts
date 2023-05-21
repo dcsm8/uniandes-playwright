@@ -1,29 +1,25 @@
 import { faker } from "@faker-js/faker";
 
 export class TagDataGenerator {
-  static getRandomPostData() {
+  static getRandomTagData() {
     return {
-      title: faker.internet.userName(),
-      content: faker.internet.userName(),
+      name: faker.internet.userName(),
+      description: faker.lorem.sentence(),
     };
   }
 
-  static getBoundaryPostDataPlusOne() {
+  static getBoundaryTagDataPlusOne() {
     return {
       title: "".repeat(2001),
       content: "Contenido valido",
     };
   }
 
-  static getBoundaryPostData() {
+  static getBoundaryTagData() {
     return {
       title: "".repeat(2000),
       content: "Contenido valido",
     };
-  }
-
-  static getValidStaffName() {
-    return "ghost";
   }
 
   static getValidTagData() {

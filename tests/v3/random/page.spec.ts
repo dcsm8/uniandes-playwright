@@ -3,13 +3,13 @@ import { LoginPage } from "../page-objects/login-page";
 import { PagesPage } from "../page-objects/pages-page";
 import { PageDataGenerator } from "../data-generators/page-data-generator";
 
-test.describe("Pages Apriori", () => {
+test.describe("Pages Random", () => {
   let loginPage: LoginPage;
   let pagesPage: PagesPage;
   let pageId: string;
 
-  // Apriori data generation
-  const { title, content } = PageDataGenerator.getValidPageData();
+  // Random data generation
+  const { title, content } = PageDataGenerator.getRandomPageData();
 
   test.beforeEach(async ({ page }) => {
     // Given
@@ -21,7 +21,7 @@ test.describe("Pages Apriori", () => {
     pageId = await pagesPage.createPage(title, content);
   });
 
-  test("Create page with valid data", async () => {
+  test("Create page with random data", async () => {
     pagesPage.testName = "create-page";
 
     // When
@@ -32,11 +32,11 @@ test.describe("Pages Apriori", () => {
     await pagesPage.expectPageStatus("Published");
   });
 
-  test("Update page with valid data", async () => {
+  test("Update page with random data", async () => {
     pagesPage.testName = "update-page";
 
     // Given
-    const updatedPage = PageDataGenerator.getValidUpdatedPageData();
+    const updatedPage = PageDataGenerator.getRandomPageData();
 
     // When
     await pagesPage.updatePageById(pageId, updatedPage);
@@ -45,7 +45,7 @@ test.describe("Pages Apriori", () => {
     await pagesPage.expectNotificationShown("Updated");
   });
 
-  test("Delete page with valid data", async () => {
+  test("Delete page with random data", async () => {
     pagesPage.testName = "delete-page";
 
     // When
@@ -57,7 +57,7 @@ test.describe("Pages Apriori", () => {
     expect(errorCode).toBe("404");
   });
 
-  test("Read page with valid data", async () => {
+  test("Read page with random data", async () => {
     pagesPage.testName = "read-page";
 
     // When
@@ -70,7 +70,7 @@ test.describe("Pages Apriori", () => {
     expect(pageContent).toBe(content);
   });
 
-  test("Create draft with valid data", async () => {
+  test("Create draft with random data", async () => {
     pagesPage.testName = "create-draft";
 
     // When

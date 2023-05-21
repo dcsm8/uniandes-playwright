@@ -104,9 +104,13 @@ test.describe("Pages Pseudo-Random", () => {
     expect(errorCode).toBe("404");
   });
 
-  test("Read page with valid data", async () => {
-    pagesPage.testName = "read-page";
+  test("Read page with valid data - title at boundary", async () => {
+    pagesPage.testName = "read-page-title-boundary";
+
     // Given
+    const { title, content } = PageDataGenerator.getBoundaryPageData();
+
+    // Create a page with the initial title and content
     pageId = await pagesPage.createPage(title, content);
 
     // When

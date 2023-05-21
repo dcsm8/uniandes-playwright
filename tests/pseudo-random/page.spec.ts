@@ -86,10 +86,13 @@ test.describe("Pages Pseudo-Random", () => {
     await pagesPage.expectTitleUpdateErrorMessage();
   });
 
-  test("Delete page with valid data", async () => {
-    pagesPage.testName = "delete-page";
+  test("Delete page with valid data - boundary", async () => {
+    pagesPage.testName = "delete-page-boundary";
 
     // Given
+    const { title, content } = PageDataGenerator.getBoundaryPageData();
+
+    // Create a page with the initial title and content
     pageId = await pagesPage.createPage(title, content);
 
     // When

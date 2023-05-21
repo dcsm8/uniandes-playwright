@@ -1,7 +1,7 @@
-import { PostDataGenerator } from "./../data-generators/post-data-generator";
+import { PostDataGenerator } from "../../data-generators/post-data-generator";
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "../page-objects/login-page";
-import { PostPage } from "../page-objects/posts-page";
+import { LoginPage } from "../../page-objects/login-page";
+import { PostPage } from "../../page-objects/posts-page";
 
 test.describe("Posts Random", () => {
   let loginPage: LoginPage;

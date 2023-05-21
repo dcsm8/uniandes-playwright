@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "../page-objects/login-page";
-import { TagPage } from "../page-objects/tags-page";
-import { TagDataGenerator } from "../data-generators/tag-data-generator";
+import { LoginPage } from "../../page-objects/login-page";
+import { TagPage } from "../../page-objects/tags-page";
+import { TagDataGenerator } from "../../data-generators/tag-data-generator";
 
 test.describe("Tags Random", () => {
   let loginPage: LoginPage;

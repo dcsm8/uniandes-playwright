@@ -2,9 +2,12 @@ import { faker } from "@faker-js/faker";
 
 export class PostDataGenerator {
   static getRandomPostData() {
+    let title = faker.lorem.words();
+    let content = faker.lorem.words();
+
     return {
-      title: faker.internet.userName(),
-      content: faker.internet.userName(),
+      title,
+      content,
     };
   }
 

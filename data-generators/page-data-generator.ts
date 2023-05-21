@@ -16,7 +16,7 @@ export class PageDataGenerator {
 
   static getBoundaryPageDataPlusOne() {
     const title = randomstring.generate({ length: 255 + 1, charset: this.charset });
-    const content = randomstring.generate({ length: 255 + 1, charset: this.charset });
+    const content = randomstring.generate();
 
     return {
       title,
@@ -26,7 +26,7 @@ export class PageDataGenerator {
 
   static getBoundaryPageData() {
     const title = randomstring.generate({ length: 255, charset: this.charset });
-    const content = randomstring.generate({ length: 255, charset: this.charset });
+    const content = randomstring.generate();
 
     return {
       title,

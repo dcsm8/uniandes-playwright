@@ -116,4 +116,13 @@ export class PagesPage {
     const notificationElement = await this.page.waitForSelector(`text=${notificationText}`);
     expect(notificationElement).toBeTruthy();
   }
+
+  async expectTitleUpdateErrorMessage() {
+    const errorArticle = await this.page.waitForSelector("article.gh-alert-red");
+    const errorMessage = await errorArticle.textContent();
+    const closeButton = await errorArticle.$("button.gh-alert-close");
+
+    await expect(errorMessage).toContain("Update failed: Title cannot be longer than 255 characters.");
+    await expect(closeButton).toBeDefined();
+  }
 }

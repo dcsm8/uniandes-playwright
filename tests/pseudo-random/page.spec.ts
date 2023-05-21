@@ -52,18 +52,38 @@ test.describe("Pages Pseudo-Random", () => {
     await expect(publishMenuButton).not.toBeVisible();
   });
 
-  test("Update page with valid data", async () => {
-    pagesPage.testName = "update-page";
+  test("Update page with valid data - title at boundary", async () => {
+    pagesPage.testName = "update-page-title-boundary";
 
     // Given
+    const { content, title } = PageDataGenerator.getValidPageData();
+    const updatedPage = PageDataGenerator.getBoundaryPageData();
+
+    // Create a page with the initial title and content
     pageId = await pagesPage.createPage(title, content);
-    const updatedPage = PageDataGenerator.getValidUpdatedPageData();
 
     // When
     await pagesPage.updatePageById(pageId, updatedPage);
 
     // Then
     await pagesPage.expectNotificationShown("Updated");
+  });
+
+  test("Update page with valid data - title beyond boundary", async () => {
+    pagesPage.testName = "update-page-title-beyond-boundary";
+
+    // Given
+    const { content, title } = PageDataGenerator.getValidPageData();
+    const updatedPage = PageDataGenerator.getBoundaryPageDataPlusOne();
+
+    // Create a page with the initial title and content
+    pageId = await pagesPage.createPage(title, content);
+
+    // When
+    await pagesPage.updatePageById(pageId, updatedPage);
+
+    // Then
+    await pagesPage.expectTitleUpdateErrorMessage();
   });
 
   test("Delete page with valid data", async () => {

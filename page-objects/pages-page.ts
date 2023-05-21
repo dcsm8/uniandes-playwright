@@ -2,7 +2,7 @@ import { Page, expect } from "@playwright/test";
 import config from "./config.json";
 
 export class PagesPage {
-  private page: Page;
+  public page: Page;
   private screenshotBasePath: string;
   public testName: string;
   private feature = "pages";

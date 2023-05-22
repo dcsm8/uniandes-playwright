@@ -1,24 +1,36 @@
 import { faker } from "@faker-js/faker";
+import randomstring from "randomstring";
 
 export class TagDataGenerator {
+  static charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+{}[]|;:,.<>?/";
+
   static getRandomTagData() {
+    let name = faker.lorem.words();
+    let description = faker.lorem.words();
+
     return {
-      name: faker.internet.userName(),
-      description: faker.lorem.sentence(),
+      name,
+      description,
     };
   }
 
   static getBoundaryTagDataPlusOne() {
+    const name = randomstring.generate({ length: 191 + 1, charset: this.charset });
+    const description = randomstring.generate();
+
     return {
-      title: "".repeat(2001),
-      content: "Contenido valido",
+      name,
+      description,
     };
   }
 
   static getBoundaryTagData() {
+    const name = randomstring.generate({ length: 191, charset: this.charset });
+    const description = randomstring.generate();
+
     return {
-      title: "".repeat(2000),
-      content: "Contenido valido",
+      name,
+      description,
     };
   }
 

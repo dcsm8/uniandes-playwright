@@ -104,4 +104,18 @@ export class TagPage {
     const draftElement = this.page.getByRole("button", { name: status });
     await expect(draftElement).toBeVisible();
   }
+
+  async expectNameUpdateErrorMessage() {
+    const errorArticle = await this.page.waitForSelector("article.gh-alert-red");
+    const errorMessage = await errorArticle.textContent();
+    const closeButton = await errorArticle.$("button.gh-alert-close");
+
+    await expect(errorMessage).toContain("Update failed: Name cannot be longer than 255 characters.");
+    await expect(closeButton).toBeDefined();
+  }
+
+  async expectTagNameError() {
+    const errorTag = await this.page.waitForSelector(".error p.response");
+    await expect(errorTag).toBeDefined();
+  }
 }

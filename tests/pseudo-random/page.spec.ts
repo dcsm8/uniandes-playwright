@@ -8,9 +8,6 @@ test.describe("Pages Pseudo-Random", () => {
   let pagesPage: PagesPage;
   let pageId: string;
 
-  // Apriori data generation
-  const { title, content } = PageDataGenerator.getValidPageData();
-
   test.beforeEach(async ({ page }) => {
     // Given
     loginPage = new LoginPage(page);

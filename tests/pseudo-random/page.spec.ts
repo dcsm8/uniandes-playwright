@@ -149,4 +149,38 @@ test.describe("Pages Pseudo-Random", () => {
     // Then
     await pagesPage.expectPageStatus("New");
   });
+
+  test("Create draft with meta title boundary", async () => {
+    pagesPage.testName = "create-draft-boundary";
+
+    // Given
+    const { title: pageTitle, content } = PageDataGenerator.getBoundaryPageData();
+    const { title: metaTitle, description } = PageDataGenerator.getBoundaryPageMetaData();
+
+    // When
+    await pagesPage.navigateToPageEditor();
+    await pagesPage.fillPageTitle(pageTitle);
+    await pagesPage.fillPageContent(content);
+    await pagesPage.fillMetadata(metaTitle, description);
+
+    // Then
+    await pagesPage.expectWordCount("70", "rgb(159, 187, 88)");
+  });
+
+  test("Create draft with meta title beyond boundary", async () => {
+    pagesPage.testName = "create-draft-boundary";
+
+    // Given
+    const { title: pageTitle, content } = PageDataGenerator.getBoundaryPageData();
+    const { title: metaTitle, description } = PageDataGenerator.getBoundaryPageMetaDataPlusOne();
+
+    // When
+    await pagesPage.navigateToPageEditor();
+    await pagesPage.fillPageTitle(pageTitle);
+    await pagesPage.fillPageContent(content);
+    await pagesPage.fillMetadata(metaTitle, description);
+
+    // Then
+    await pagesPage.expectWordCount("71", "rgb(226, 84, 64)");
+  });
 });

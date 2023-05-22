@@ -33,6 +33,15 @@ export class PagesPage {
     await this.updatePage();
   }
 
+  async fillMetadata(title: string, description: string) {
+    await this.page.getByRole("button", { name: "Settings" }).click();
+    await this.page.getByRole("listitem").filter({ hasText: "Meta data Extra content for search engines" }).click();
+    await this.page.getByLabel("Meta title").click();
+    await this.page.getByLabel("Meta title").fill(title);
+    await this.page.getByLabel("Meta description").click();
+    await this.page.getByLabel("Meta description").fill(description);
+  }
+
   async deletePageById(pageId: string): Promise<void> {
     await this.navigateToPageById(pageId);
     await this.deletePage();
@@ -124,5 +133,13 @@ export class PagesPage {
 
     await expect(errorMessage).toContain("Update failed: Title cannot be longer than 255 characters.");
     await expect(closeButton).toBeDefined();
+  }
+
+  async expectWordCount(count: string, color: string) {
+    const wordCountElement = await this.page.waitForSelector("span.word-count");
+    const textContent = await wordCountElement.textContent();
+    const elementColor = await wordCountElement.evaluate((el) => getComputedStyle(el).color);
+    expect(textContent).toBe(count);
+    expect(elementColor).toBe(color);
   }
 }

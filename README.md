@@ -104,3 +104,25 @@ npx playwright test --ui
 ```bash
 node .\regression-testing\index.js
 ```
+
+
+## Tests folder structure
+
+tests
+|   
+├───apriori
+│       page.spec.ts
+│       post.spec.ts
+│       staff.spec.ts
+│       tag.spec.ts
+│       
+├───pseudo-random
+│       page.spec.ts
+│       post.spec.ts
+│       tag.spec.ts
+│       
+└───random
+        page.spec.ts
+        post.spec.ts
+        staff.spec.ts
+        tag.spec.ts

@@ -132,4 +132,72 @@ test.describe("Posts Pseudo Random", () => {
     // Then
     await postPage.expectPostStatus("New");
   });
+
+  test("Create draft with meta title boundary", async () => {
+    postPage.testName = "create-draft-boundary";
+
+    // Given
+    const { title: pageTitle, content } = PostDataGenerator.getBoundaryPostData();
+    const { title: metaTitle } = PostDataGenerator.getBoundaryPageMetaData();
+
+    // When
+    await postPage.navigateToPostEditor();
+    await postPage.fillPostTitle(pageTitle);
+    await postPage.fillPostContent(content);
+    await postPage.fillMetadata(metaTitle, "");
+
+    // Then
+    await postPage.expectTitleWordCount("70", "rgb(159, 187, 88)");
+  });
+
+  test("Create draft with meta title beyond boundary", async () => {
+    postPage.testName = "create-draft-boundary";
+
+    // Given
+    const { title: pageTitle, content } = PostDataGenerator.getBoundaryPostData();
+    const { title: metaTitle } = PostDataGenerator.getBoundaryPageMetaDataPlusOne();
+
+    // When
+    await postPage.navigateToPostEditor();
+    await postPage.fillPostTitle(pageTitle);
+    await postPage.fillPostContent(content);
+    await postPage.fillMetadata(metaTitle, "");
+
+    // Then
+    await postPage.expectTitleWordCount("71", "rgb(226, 84, 64)");
+  });
+
+  test("Create draft with meta description boundary", async () => {
+    postPage.testName = "create-draft-boundary";
+
+    // Given
+    const { title: pageTitle, content } = PostDataGenerator.getBoundaryPostData();
+    const { description } = PostDataGenerator.getBoundaryPageMetaData();
+
+    // When
+    await postPage.navigateToPostEditor();
+    await postPage.fillPostTitle(pageTitle);
+    await postPage.fillPostContent(content);
+    await postPage.fillMetadata("", description);
+
+    // Then
+    await postPage.expectDescriptionWordCount("156", "rgb(159, 187, 88)");
+  });
+
+  test("Create draft with meta description beyond boundary", async () => {
+    postPage.testName = "create-draft-boundary";
+
+    // Given
+    const { title: pageTitle, content } = PostDataGenerator.getBoundaryPostData();
+    const { description } = PostDataGenerator.getBoundaryPageMetaDataPlusOne();
+
+    // When
+    await postPage.navigateToPostEditor();
+    await postPage.fillPostTitle(pageTitle);
+    await postPage.fillPostContent(content);
+    await postPage.fillMetadata("", description);
+
+    // Then
+    await postPage.expectDescriptionWordCount("157", "rgb(226, 84, 64)");
+  });
 });

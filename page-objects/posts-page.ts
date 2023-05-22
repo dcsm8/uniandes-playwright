@@ -38,6 +38,15 @@ export class PostPage {
     return postId;
   }
 
+  async fillMetadata(title: string, description: string) {
+    await this.page.getByRole("button", { name: "Settings" }).click();
+    await this.page.getByRole("listitem").filter({ hasText: "Meta data Extra content for search engines" }).click();
+    await this.page.getByLabel("Meta title").click();
+    await this.page.getByLabel("Meta title").fill(title);
+    await this.page.getByLabel("Meta description").click();
+    await this.page.getByLabel("Meta description").fill(description);
+  }
+
   async fillPostTitle(title: string) {
     await this.page.getByPlaceholder("Post Title").click();
     await this.page.getByPlaceholder("Post Title").fill(title);
@@ -124,5 +133,25 @@ export class PostPage {
 
     await expect(errorMessage).toContain("Update failed: Title cannot be longer than 255 characters.");
     await expect(closeButton).toBeDefined();
+  }
+
+  async expectTitleWordCount(count: string, color: string) {
+    const wordCountElement = await this.page.waitForSelector(
+      'input[name="post-setting-meta-title"] + p span.word-count'
+    );
+    const textContent = await wordCountElement.textContent();
+    const elementColor = await wordCountElement.evaluate((el) => getComputedStyle(el).color);
+    expect(textContent).toBe(count);
+    expect(elementColor).toBe(color);
+  }
+
+  async expectDescriptionWordCount(count: string, color: string) {
+    const wordCountElement = await this.page.waitForSelector(
+      'textarea[name="post-setting-meta-description"] + p span.word-count'
+    );
+    const textContent = await wordCountElement.textContent();
+    const elementColor = await wordCountElement.evaluate((el) => getComputedStyle(el).color);
+    expect(textContent).toBe(count);
+    expect(elementColor).toBe(color);
   }
 }

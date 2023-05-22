@@ -47,4 +47,24 @@ export class PostDataGenerator {
       content: "Updated post content",
     };
   }
+
+  static getBoundaryPageMetaData() {
+    const title = randomstring.generate({ length: 70, charset: this.charset });
+    const description = randomstring.generate({ length: 156, charset: this.charset });
+
+    return {
+      title,
+      description,
+    };
+  }
+
+  static getBoundaryPageMetaDataPlusOne() {
+    const title = randomstring.generate({ length: 70 + 1, charset: this.charset });
+    const description = randomstring.generate({ length: 156 + 1, charset: this.charset });
+
+    return {
+      title,
+      description,
+    };
+  }
 }

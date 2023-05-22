@@ -155,16 +155,16 @@ test.describe("Pages Pseudo-Random", () => {
 
     // Given
     const { title: pageTitle, content } = PageDataGenerator.getBoundaryPageData();
-    const { title: metaTitle, description } = PageDataGenerator.getBoundaryPageMetaData();
+    const { title: metaTitle } = PageDataGenerator.getBoundaryPageMetaData();
 
     // When
     await pagesPage.navigateToPageEditor();
     await pagesPage.fillPageTitle(pageTitle);
     await pagesPage.fillPageContent(content);
-    await pagesPage.fillMetadata(metaTitle, description);
+    await pagesPage.fillMetadata(metaTitle, "");
 
     // Then
-    await pagesPage.expectWordCount("70", "rgb(159, 187, 88)");
+    await pagesPage.expectTitleWordCount("70", "rgb(159, 187, 88)");
   });
 
   test("Create draft with meta title beyond boundary", async () => {
@@ -172,15 +172,49 @@ test.describe("Pages Pseudo-Random", () => {
 
     // Given
     const { title: pageTitle, content } = PageDataGenerator.getBoundaryPageData();
-    const { title: metaTitle, description } = PageDataGenerator.getBoundaryPageMetaDataPlusOne();
+    const { title: metaTitle } = PageDataGenerator.getBoundaryPageMetaDataPlusOne();
 
     // When
     await pagesPage.navigateToPageEditor();
     await pagesPage.fillPageTitle(pageTitle);
     await pagesPage.fillPageContent(content);
-    await pagesPage.fillMetadata(metaTitle, description);
+    await pagesPage.fillMetadata(metaTitle, "");
 
     // Then
-    await pagesPage.expectWordCount("71", "rgb(226, 84, 64)");
+    await pagesPage.expectTitleWordCount("71", "rgb(226, 84, 64)");
+  });
+
+  test("Create draft with meta description boundary", async () => {
+    pagesPage.testName = "create-draft-boundary";
+
+    // Given
+    const { title: pageTitle, content } = PageDataGenerator.getBoundaryPageData();
+    const { description } = PageDataGenerator.getBoundaryPageMetaData();
+
+    // When
+    await pagesPage.navigateToPageEditor();
+    await pagesPage.fillPageTitle(pageTitle);
+    await pagesPage.fillPageContent(content);
+    await pagesPage.fillMetadata("", description);
+
+    // Then
+    await pagesPage.expectDescriptionWordCount("156", "rgb(159, 187, 88)");
+  });
+
+  test("Create draft with meta description beyond boundary", async () => {
+    pagesPage.testName = "create-draft-boundary";
+
+    // Given
+    const { title: pageTitle, content } = PageDataGenerator.getBoundaryPageData();
+    const { description } = PageDataGenerator.getBoundaryPageMetaDataPlusOne();
+
+    // When
+    await pagesPage.navigateToPageEditor();
+    await pagesPage.fillPageTitle(pageTitle);
+    await pagesPage.fillPageContent(content);
+    await pagesPage.fillMetadata("", description);
+
+    // Then
+    await pagesPage.expectDescriptionWordCount("157", "rgb(226, 84, 64)");
   });
 });

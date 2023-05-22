@@ -135,8 +135,20 @@ export class PagesPage {
     await expect(closeButton).toBeDefined();
   }
 
-  async expectWordCount(count: string, color: string) {
-    const wordCountElement = await this.page.waitForSelector("span.word-count");
+  async expectTitleWordCount(count: string, color: string) {
+    const wordCountElement = await this.page.waitForSelector(
+      'input[name="post-setting-meta-title"] + p span.word-count'
+    );
+    const textContent = await wordCountElement.textContent();
+    const elementColor = await wordCountElement.evaluate((el) => getComputedStyle(el).color);
+    expect(textContent).toBe(count);
+    expect(elementColor).toBe(color);
+  }
+
+  async expectDescriptionWordCount(count: string, color: string) {
+    const wordCountElement = await this.page.waitForSelector(
+      'textarea[name="post-setting-meta-description"] + p span.word-count'
+    );
     const textContent = await wordCountElement.textContent();
     const elementColor = await wordCountElement.evaluate((el) => getComputedStyle(el).color);
     expect(textContent).toBe(count);

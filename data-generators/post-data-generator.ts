@@ -1,6 +1,9 @@
 import { faker } from "@faker-js/faker";
+import randomstring from "randomstring";
 
 export class PostDataGenerator {
+  static charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+{}[]|;:,.<>?/";
+
   static getRandomPostData() {
     let title = faker.lorem.words();
     let content = faker.lorem.words();
@@ -12,30 +15,36 @@ export class PostDataGenerator {
   }
 
   static getBoundaryPostDataPlusOne() {
+    const title = randomstring.generate({ length: 255 + 1, charset: this.charset });
+    const content = randomstring.generate();
+
     return {
-      title: "".repeat(2001),
-      content: "Contenido valido",
+      title,
+      content,
     };
   }
 
   static getBoundaryPostData() {
+    const title = randomstring.generate({ length: 255, charset: this.charset });
+    const content = randomstring.generate();
+
     return {
-      title: "".repeat(2000),
-      content: "Contenido valido",
+      title,
+      content,
     };
   }
 
   static getValidPostData() {
     return {
-      title: "New title",
-      content: "New content",
+      title: "New post title",
+      content: "New post content",
     };
   }
 
   static getValidUpdatedPostData() {
     return {
-      title: "Updated title",
-      content: "Updated content",
+      title: "Updated post title",
+      content: "Updated post content",
     };
   }
 }
